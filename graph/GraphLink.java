@@ -139,7 +139,9 @@ public class GraphLink<E extends Comparable<E>> {//grafo no dirigido(ida y vuelt
             }
         }
         return result;
-    }//busqueda de profundidad en niveles
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //busqueda de profundidad en niveles
     public LinkedList<E> dfs(E start) throws ItemNotFound, IsEmpty {
         LinkedList<E> result = new LinkedList<>();//creacion de una lista
         boolean[] visited = new boolean[vertices.size()];//arreglo de booleanos que marca si cada nodo fue visitado o no
