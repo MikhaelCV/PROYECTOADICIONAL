@@ -24,30 +24,30 @@ public class AVLTree<E extends Comparable<E>> {
         updateHeight(node);
         return balance(node);
     }
-//para eliminar los keys
+//para eliminar los keys///////////////////////////
     public void delete(E element) throws ItemNotFound {
-        root = delete(root, element);
+        root = delete(root, element);//comenzamos desde la raiz
     }
 
     private AVLNode<E> delete(AVLNode<E> node, E element) throws ItemNotFound {
-        if (node == null) throw new ItemNotFound("Elemento no encontrado: " + element);//vacio
+        if (node == null) throw new ItemNotFound("Elemento no encontrado: " + element);//vacio?
 
-        int cmp = element.compareTo(node.element);
+        int cmp = element.compareTo(node.element);//compara los elementos con el nodo corredor(el que eliminaremos)
         if (cmp < 0) {
-            node.left = delete(node.left, element);
+            node.left = delete(node.left, element);//si es menor izq
         } else if (cmp > 0) {
-            node.right = delete(node.right, element);
+            node.right = delete(node.right, element);//si es mayor derecha
         } else {
-            if (node.left == null || node.right == null) {
+            if (node.left == null || node.right == null) {//Esto elimina el nodo directamente.
                 node = (node.left != null) ? node.left : node.right;
             } else {
-                AVLNode<E> min = findMin(node.right);
-                node.element = min.element;
-                node.right = delete(node.right, min.element);
+                AVLNode<E> min = findMin(node.right);//Busca el sucesor inorden
+                node.element = min.element;//Copia su valor en el nodo actual
+                node.right = delete(node.right, min.element);//Luego elimina ese sucesor del subárbol derecho
             }
         }
 
-        if (node != null) {
+        if (node != null) {//actualizmos la altyura
             updateHeight(node);
             node = balance(node);
         }
@@ -84,7 +84,9 @@ public class AVLTree<E extends Comparable<E>> {
         }
         return node;
     }
-
+///////////////////////////////////////////////////////////
+    //ROTACIONES
+        //derecha
     private AVLNode<E> rotateRight(AVLNode<E> y) {
         AVLNode<E> x = y.left;
         y.left = x.right;//x se convierte en el nuevo padre
@@ -93,7 +95,7 @@ public class AVLTree<E extends Comparable<E>> {
         updateHeight(x);
         return x;
     }
-
+        //izquierda
     private AVLNode<E> rotateLeft(AVLNode<E> x) {
         AVLNode<E> y = x.right;
         x.right = y.left;//y se convierte en el nuevo padre
@@ -102,7 +104,8 @@ public class AVLTree<E extends Comparable<E>> {
         updateHeight(y);
         return y;
     }
-
+//Para listar los elementos ordenados
+    //
     public void inOrder() {
         inOrder(root);
         System.out.println();
