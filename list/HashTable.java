@@ -35,17 +35,17 @@ public class HashTable<K, V> {
      * Inserta un par (key,value). Lanza ItemDuplicated si la clave ya existe.
      */
     public void put(K key, V value) throws ItemDuplicated {
-        int idx = hash(key);
-        HashNode<K, V> node = table[idx];
+        int idx = hash(key);//pocicion dentro del ht
+        HashNode<K, V> node = table[idx];//toma el primer nodo
         while (node != null) {
-            if ((key == null && node.getKey() == null) || (key != null && key.equals(node.getKey()))) {
+            if ((key == null && node.getKey() == null) || (key != null && key.equals(node.getKey()))) {//Compara la clave que se quiere insertar con la de los nodos existentes.
                 throw new ItemDuplicated("Clave duplicada: " + key);
             }
-            node = node.getNext();
+            node = node.getNext();//Continúa al siguiente nodo de la lista en caso no haya coincidencia aún.
         }
         HashNode<K, V> newNode = new HashNode<>(key, value);
-        newNode.setNext(table[idx]);
-        table[idx] = newNode;
+        newNode.setNext(table[idx]);//El nuevo nodo se coloca al inicio de la lista enlazada.
+        table[idx] = newNode;//La cabeza de la lista en la posición idx ahora es el nuevo nodo.
         size++;
         if ((double) size / capacity >= DEFAULT_LOAD_FACTOR) { //si excede la capacidad de 0.75
             rehash();// rehash, duplica el tamanio
@@ -56,13 +56,13 @@ public class HashTable<K, V> {
      * Obtiene el valor asociado a la clave. Lanza ItemNotFound si no existe.
      */
     public V get(K key) throws ItemNotFound {
-        int idx = hash(key);
-        HashNode<K, V> node = table[idx];
+        int idx = hash(key);//calcula la pocicion
+        HashNode<K, V> node = table[idx];//Toma el primer nodo de la lista enlazada que está en esa posición del arreglo.
         while (node != null) {
-            if ((key == null && node.getKey() == null) || (key != null && key.equals(node.getKey()))) {
+            if ((key == null && node.getKey() == null) || (key != null && key.equals(node.getKey()))) {//Compara la clave que se busca con la del nodo actual:
                 return node.getValue();
             }
-            node = node.getNext();
+            node = node.getNext();//Si no encontró aún la clave, avanza al siguiente nodo en la lista enlazada.
         }
         throw new ItemNotFound("Clave no encontrada: " + key);
     }
@@ -71,16 +71,16 @@ public class HashTable<K, V> {
      * Remueve el par con la clave dada y retorna su valor. Lanza ItemNotFound si no existe.
      */
     public V remove(K key) throws ItemNotFound {
-        int idx = hash(key);
-        HashNode<K, V> node = table[idx];
-        HashNode<K, V> prev = null;
+        int idx = hash(key);//pisicion
+        HashNode<K, V> node = table[idx];//primer node de la lista enlazada 
+        HashNode<K, V> prev = null;//como es el primer el anteriior es null
         while (node != null) {
-            if ((key == null && node.getKey() == null) || (key != null && key.equals(node.getKey()))) {
-                V val = node.getValue();
+            if ((key == null && node.getKey() == null) || (key != null && key.equals(node.getKey()))) {//Si no son null pero son iguales usando .equals()
+                V val = node.getValue();//Guarda el valor del nodo que se va a eliminar
                 if (prev == null) {
                     table[idx] = node.getNext();
                 } else {
-                    prev.setNext(node.getNext());
+                    prev.setNext(node.getNext());//Si está más adelante, el nodo anterior (prev) apunta al siguiente del actual (node.getNext()), eliminando así el nodo actual de la cadena.
                 }
                 size--;
                 return val;
@@ -120,6 +120,7 @@ public class HashTable<K, V> {
     }
 
     //Suprime la advertencia de casting al crear un arreglo genéric
+    //REHASHEO
     @SuppressWarnings("unchecked")
     private void rehash() {// duplica cuando se ingresa el modulo 9
         HashNode<K, V>[] oldTable = table;
